@@ -27,7 +27,7 @@ int NUMNODES;
 int main (int argc, char *argv[]) {
   
   int myrank, commsize; 
-  int a,b,c,d,e,f;
+  int a,b,c,d,e,f,g;
 
   MPI_Init (&argc, &argv);
   MPI_Comm_rank (MPI_COMM_WORLD, &myrank);
@@ -41,25 +41,38 @@ int main (int argc, char *argv[]) {
   strcpy(LNETFile, argv[1]);
   strcpy(ComputeFile, argv[2]);
 
-  NUMLNETS=0;
+  NUMLNETS = 0;
+  NUMNODES = 0;
 
   if (myrank == 0) {
     FILE *lnetfp = fopen(LNETFile, "r");
     if(lnetfp==NULL) exit(1);
     while (fscanf(lnetfp, "%d %d %d %d %d %d\n", &a,&b,&c,&d,&e,&f) > 0) {
 #ifdef DEBUG
-     printf ("%d %d %d %d %d %d\n", &a,&b,&c,&d,&e,&f);
+      printf ("%d %d %d %d %d %d\n", a,b,c,d,e,f);
 #endif
-     NUMLNETS ++;
+      LNETNode *lnetnode = new LNETNode (a,b,c,d,e,f);
+      NUMLNETS ++;
     }
     fclose(lnetfp);
+
     FILE *computefp = fopen(ComputeFile, "r");
+    if(computefp==NULL) exit(1);
+    while (fscanf(computefp, "%d %d %d %d %d %d %d\n", &a,&b,&c,&d,&e,&f,&g) > 0) {
+#ifdef DEBUG
+      printf ("%d %d %d %d %d %d %d\n", a,b,c,d,e,f,g);
+#endif
+      NUMNODES ++;
+    }
     fclose(computefp);
   }
 
   MPI_Bcast (&NUMLNETS, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast (&NUMNODES, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-  //LNETNode *lnetnode = new LNETNode (lnetnodeid);
+#ifdef DEBUG
+  printf("%d %d\n", NUMLNETS, NUMNODES);
+#endif
 
   MPI_Finalize ();
 }

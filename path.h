@@ -18,15 +18,21 @@ class LNETNode {
    private:
 
 		int nodeId;
+    int coords[5];
 		int *hops;	
- 
+
    public:
 
-    LNETNode() { nodeId = 0;}
+    LNETNode() { nodeId = 0; }
 		~LNETNode() {}
 
-    LNETNode (int nodeid) {
+    LNETNode (int nodeid, int b,int c,int d,int e,int f) {
       nodeId = nodeid;
+      coords[0]=b;
+      coords[1]=c;
+      coords[2]=d;
+      coords[3]=e;
+      coords[4]=f;
       hops = (int *) malloc(NUMNODES * sizeof(int));
     }
 

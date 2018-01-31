@@ -1,5 +1,5 @@
 #!/bin/bash
-#COBALT -t 10
+#COBALT -t 20
 #COBALT -q default
 #COBALT -A Performance
 
